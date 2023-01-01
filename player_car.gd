@@ -3,7 +3,6 @@ extends Car
 func _process(delta : float) -> void:
 	._process(delta)
 	_check_gear()
-	print(velocity)
 	
 	
 func _check_gear() -> void:

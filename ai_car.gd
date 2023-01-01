@@ -12,6 +12,12 @@ func is_brake_pressed() -> bool:
 	
 	return velocity > target_velocity
 	
+	
+func fall() -> void:
+	.fall()
+	yield(self, "fall_finished")
+	queue_free()
+	
 
 func get_steering_direction() -> int:
 	return 0

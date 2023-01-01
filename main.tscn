@@ -5,7 +5,6 @@
 [ext_resource path="res://cam.gd" type="Script" id=3]
 [ext_resource path="res://assets/roads/grass.png" type="Texture" id=4]
 [ext_resource path="res://assets/roads/two_lane_road.png" type="Texture" id=5]
-[ext_resource path="res://car_spawner.tscn" type="PackedScene" id=6]
 [ext_resource path="res://main.gd" type="Script" id=7]
 [ext_resource path="res://assets/roads/merge_road.png" type="Texture" id=8]
 
@@ -87,6 +86,9 @@ load_path = "res://.import/one_lane_road.png-0067d9b713929ce8d649ec756cfa5c61.st
 [sub_resource type="RectangleShape2D" id=15]
 extents = Vector2( 1349.16, 38.1838 )
 
+[sub_resource type="RectangleShape2D" id=18]
+extents = Vector2( 136.472, 1676.9 )
+
 [sub_resource type="RectangleShape2D" id=16]
 extents = Vector2( 6.71745, 72.1253 )
 
@@ -120,20 +122,17 @@ rotation = -0.785398
 position = Vector2( 77.7817, 45.2547 )
 shape = SubResource( 15 )
 
-[node name="CarSpawner" parent="." instance=ExtResource( 6 )]
-position = Vector2( -749, 855 )
+[node name="SolidGround" type="Area2D" parent="."]
+rotation = 0.785398
+monitorable = false
 
-[node name="CarSpawner2" parent="." instance=ExtResource( 6 )]
-position = Vector2( -786, 864 )
-
-[node name="CarSpawner3" parent="." instance=ExtResource( 6 )]
-position = Vector2( 979, -928 )
-rotation = 2.35619
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SolidGround"]
+position = Vector2( 45.2548, -499.571 )
+shape = SubResource( 18 )
 
 [node name="MergePoint" type="Area2D" parent="."]
 position = Vector2( 963, -870 )
 rotation = 0.785398
-scale = Vector2( 1, 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MergePoint"]
 position = Vector2( 9.54608, -61.5189 )
@@ -147,3 +146,11 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SplitPoint"]
 position = Vector2( 1.23718, 0 )
 shape = SubResource( 17 )
+
+[node name="StartSpawner" type="Node2D" parent="."]
+position = Vector2( 1069, -992 )
+rotation = -0.785398
+
+[node name="StartSpawner2" type="Node2D" parent="."]
+position = Vector2( 1035, -928 )
+rotation = -0.785398

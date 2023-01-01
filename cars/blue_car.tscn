@@ -47,7 +47,7 @@ region = Rect2( 128, 4, 16, 8 )
 extents = Vector2( 7, 4 )
 
 [sub_resource type="RectangleShape2D" id=12]
-extents = Vector2( 18, 7 )
+extents = Vector2( 39.5, 7 )
 
 [node name="BlueCar" type="KinematicBody2D"]
 script = ExtResource( 3 )
@@ -96,5 +96,5 @@ shape = SubResource( 11 )
 [node name="HitDetection" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitDetection"]
-position = Vector2( 26, 0 )
+position = Vector2( 47.5, 0 )
 shape = SubResource( 12 )

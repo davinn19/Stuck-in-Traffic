@@ -1,5 +1,6 @@
 class_name Car
 extends KinematicBody2D
+signal fall_finished()
 
 const car_mass : int = 200
 
@@ -44,6 +45,17 @@ func _process(delta : float) -> void:
 func _on_car_crashed(other_car : Car) -> void:
 	other_car.crashed = true
 	crashed = true
+	set_process(false)
+	
+
+func fall() -> void:
+	print("car fell")
+	crashed = true
+	var tween : SceneTreeTween = create_tween()
+	tween.tween_property(self, "scale", Vector2.ZERO, 1)
+	yield(tween, "finished")
+	emit_signal("fall_finished")
+	set_process(false)
 	
 	
 func _get_rpm() -> float:
