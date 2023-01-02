@@ -10,7 +10,7 @@ func _on_collide(car : PhysicsBody2D) -> void:
 
 func fall() -> void:
 	$KinematicHitDetection.queue_free()
-	$CollisionShape2D.queue_free()
+	$Hitbox.queue_free()
 	
 	
 	var tween : SceneTreeTween = create_tween()

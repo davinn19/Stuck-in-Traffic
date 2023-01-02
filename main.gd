@@ -19,7 +19,7 @@ func _ready() -> void:
 	
 	for spawner in get_children():
 		if spawner.name.count("StartSpawner") > 0:
-			for i in range(5):
+			for i in range(50):
 				_create_car(spawner).move_local_x(i * -30)
 				
 

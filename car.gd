@@ -10,7 +10,6 @@ const ragdoll_template : Resource = preload("res://ragdoll_car.tscn")
 # contains rpm, steering sensitivity
 const gear_properties : Array = [[500, 0.8], [100, 1.2]]
 
-
 var cur_gear : int = 0
 
 var velocity : float = 0
@@ -37,6 +36,7 @@ func _process(delta : float) -> void:
 	if health <= 0:
 		ragdoll()
 		return
+		
 
 	rpm = lerp(0, _get_rpm(), -brake_percent + 1)
 
@@ -77,7 +77,7 @@ func ragdoll() -> RagdollCar:
 	
 	ragdoll_car.linear_velocity = Vector2.RIGHT.rotated(rotation) * velocity
 	
-	get_parent().add_child(ragdoll_car)
+	get_tree().root.get_node("Main/Cars").add_child(ragdoll_car)
 	
 	ragdoll_car.get_node("KinematicHitDetection").add_child(ragdoll_car.get_node("Hitbox").duplicate())
 	
@@ -105,7 +105,3 @@ func _get_rpm() -> float:
 
 func _get_steering_sensitivity() -> float:
 	return gear_properties[cur_gear][1]
-	
-	
-# TODO implement brake detection
-

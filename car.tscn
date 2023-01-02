@@ -9,8 +9,10 @@ extents = Vector2( 0, 0 )
 
 [sub_resource type="RectangleShape2D" id=2]
 resource_local_to_scene = true
+extents = Vector2( 1, 1 )
 
 [node name="Car" type="KinematicBody2D"]
+collision_mask = 3
 script = ExtResource( 1 )
 
 [node name="Sprites" type="Node2D" parent="."]
@@ -19,10 +21,19 @@ script = ExtResource( 2 )
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="BrakeDetection" type="Area2D" parent="."]
+[node name="Controller" type="Node2D" parent="."]
+script = ExtResource( 3 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BrakeDetection"]
+[node name="BrakeDetection" type="Area2D" parent="Controller"]
+collision_layer = 0
+collision_mask = 3
+monitorable = false
+
+[node name="Detector" type="CollisionShape2D" parent="Controller/BrakeDetection"]
+position = Vector2( 1, 0 )
 shape = SubResource( 2 )
 
-[node name="Controller" type="Node" parent="."]
-script = ExtResource( 3 )
+[node name="Polygon2D" type="Polygon2D" parent="Controller/BrakeDetection"]
+position = Vector2( 1, 0 )
+color = Color( 1, 0, 0, 0.572549 )
+polygon = PoolVector2Array( -1, -1, 1, -1, 1, 1, -1, 1 )
