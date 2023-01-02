@@ -9,6 +9,7 @@ var player_car : Car
 
 func _init() -> void:
 	_load_car_types()
+	randomize()
 
 
 func _ready() -> void:
