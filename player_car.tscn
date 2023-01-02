@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://assets/cars/player_car.png" type="Texture" id=1]
 [ext_resource path="res://stacked_sprites.gd" type="Script" id=2]
@@ -47,23 +47,9 @@ region = Rect2( 144, 4, 16, 8 )
 [sub_resource type="RectangleShape2D" id=11]
 extents = Vector2( 7, 4 )
 
-[sub_resource type="Animation" id=12]
-resource_name = "turn"
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:rotation_degrees")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5, 1 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ -45.0, -10.0, -45.0 ]
-}
-
 [node name="GreenCar" type="KinematicBody2D"]
 rotation = -0.785398
+collision_mask = 3
 script = ExtResource( 3 )
 
 [node name="Sprites" type="Node2D" parent="."]
@@ -110,6 +96,3 @@ texture = SubResource( 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 11 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/turn = SubResource( 12 )

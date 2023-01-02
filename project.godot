@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Car",
+"class": "AICar",
+"language": "GDScript",
+"path": "res://ai_car.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Car",
 "language": "GDScript",
@@ -23,11 +28,24 @@ _global_script_classes=[ {
 "class": "GitAPI",
 "language": "NativeScript",
 "path": "res://addons/godot-git-plugin/git_api.gdns"
+}, {
+"base": "Car",
+"class": "PlayerCar",
+"language": "GDScript",
+"path": "res://player_car.gd"
+}, {
+"base": "RigidBody2D",
+"class": "RagdollCar",
+"language": "GDScript",
+"path": "res://ragdoll_car.gd"
 } ]
 _global_script_class_icons={
+"AICar": "",
 "Car": "",
 "CarSpawner": "",
-"GitAPI": ""
+"GitAPI": "",
+"PlayerCar": "",
+"RagdollCar": ""
 }
 
 [application]
@@ -73,16 +91,16 @@ brake={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
-gear_down={
+shift_gear={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":69,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
-gear_up={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":81,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
- ]
-}
+
+[layer_names]
+
+2d_physics/layer_1="Kinematic"
+2d_physics/layer_2="Ragdolls"
 
 [physics]
 
@@ -91,4 +109,4 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-environment/default_clear_color=Color( 0.498039, 0.835294, 0.796078, 1 )
+environment/default_clear_color=Color( 0.541176, 0.921569, 0.945098, 1 )
