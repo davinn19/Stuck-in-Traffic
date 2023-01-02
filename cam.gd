@@ -1,7 +1,7 @@
 extends Camera2D
 
 
-onready var player : WeakRef = weakref(get_node("../Cars/Car"))
+var player : WeakRef
 
 func _process(delta : float) -> void:
 	if player.get_ref():

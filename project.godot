@@ -9,30 +9,25 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Car",
-"class": "AICar",
-"language": "GDScript",
-"path": "res://ai_car.gd"
-}, {
 "base": "KinematicBody2D",
 "class": "Car",
 "language": "GDScript",
 "path": "res://car.gd"
 }, {
-"base": "Node2D",
-"class": "CarSpawner",
+"base": "Resource",
+"class": "CarInfo",
 "language": "GDScript",
-"path": "res://car_spawner.gd"
+"path": "res://car_info.gd"
+}, {
+"base": "Node",
+"class": "Controller",
+"language": "GDScript",
+"path": "res://controllers/controller.gd"
 }, {
 "base": "EditorVCSInterface",
 "class": "GitAPI",
 "language": "NativeScript",
 "path": "res://addons/godot-git-plugin/git_api.gdns"
-}, {
-"base": "Car",
-"class": "PlayerCar",
-"language": "GDScript",
-"path": "res://player_car.gd"
 }, {
 "base": "RigidBody2D",
 "class": "RagdollCar",
@@ -40,11 +35,10 @@ _global_script_classes=[ {
 "path": "res://ragdoll_car.gd"
 } ]
 _global_script_class_icons={
-"AICar": "",
 "Car": "",
-"CarSpawner": "",
+"CarInfo": "",
+"Controller": "",
 "GitAPI": "",
-"PlayerCar": "",
 "RagdollCar": ""
 }
 
