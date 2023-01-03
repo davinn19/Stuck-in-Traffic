@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/splash.mp3-ea4d1ef9588dbca4c0cfbea8601e6462.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/splash.mp3"
+dest_files=[ "res://.import/splash.mp3-ea4d1ef9588dbca4c0cfbea8601e6462.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

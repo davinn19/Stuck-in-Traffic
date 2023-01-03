@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/after.ogg-0da4d6b8b0fbcc54f28128e519ad1cd0.oggstr"
+
+[deps]
+
+source_file="res://assets/songs/after.ogg"
+dest_files=[ "res://.import/after.ogg-0da4d6b8b0fbcc54f28128e519ad1cd0.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

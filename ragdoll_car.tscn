@@ -14,4 +14,6 @@ script = ExtResource( 1 )
 collision_layer = 0
 monitorable = false
 
+[node name="Tween" type="Tween" parent="."]
+
 [connection signal="body_entered" from="KinematicHitDetection" to="." method="_on_collide"]

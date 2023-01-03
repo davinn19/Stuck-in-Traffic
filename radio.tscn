@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://radio.gd" type="Script" id=1]
+[ext_resource path="res://assets/sounds/static.wav" type="AudioStream" id=2]
+
+[node name="Radio" type="AudioStreamPlayer2D"]
+autoplay = true
+bus = "BGM"
+script = ExtResource( 1 )
+
+[node name="Static" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 2 )
+attenuation = 0.0213444
+bus = "BGM"

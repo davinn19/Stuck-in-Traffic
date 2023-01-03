@@ -1,8 +1,13 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://car.gd" type="Script" id=1]
 [ext_resource path="res://stacked_sprites.gd" type="Script" id=2]
 [ext_resource path="res://controllers/ai.gd" type="Script" id=3]
+[ext_resource path="res://assets/sounds/engine_gun.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/sounds/brake.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/sounds/crash.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/sounds/low_rev.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/sounds/splash.mp3" type="AudioStream" id=8]
 
 [sub_resource type="RectangleShape2D" id=22]
 extents = Vector2( 0, 0 )
@@ -20,6 +25,36 @@ script = ExtResource( 2 )
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource( 22 )
+
+[node name="Audio" type="Node2D" parent="."]
+
+[node name="BrakeSound" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 5 )
+max_distance = 75.0
+bus = "SFX"
+
+[node name="CrashSound" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 6 )
+max_distance = 75.0
+bus = "SFX"
+
+[node name="EngineSound" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 4 )
+autoplay = true
+max_distance = 75.0
+bus = "SFX"
+
+[node name="RevSound" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 7 )
+autoplay = true
+max_distance = 75.0
+bus = "SFX"
+
+[node name="SplashSound" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource( 8 )
+volume_db = 2.0
+max_distance = 75.0
+bus = "SFX"
 
 [node name="Controller" type="Node2D" parent="."]
 script = ExtResource( 3 )

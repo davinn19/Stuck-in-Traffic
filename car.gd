@@ -42,6 +42,7 @@ func _process(delta : float) -> void:
 	rpm = lerp(0, _get_rpm(), -brake_percent + 1)
 
 	velocity = max(velocity + _get_acceleration() * delta, 0)
+	$Audio/EngineSound.pitch_scale = 1 + velocity / 100
 	
 	var collision : KinematicCollision2D = move_and_collide(Vector2.RIGHT.rotated(rotation) * 2 * velocity * delta, false)
 	if collision:
@@ -64,6 +65,7 @@ func _get_acceleration() -> float:
 # to ragdoll car, and preserves linear velocity
 func ragdoll() -> RagdollCar:
 	emit_signal("crashed")
+	$Controller.queue_free()
 	
 	var ragdoll_car : RagdollCar = ragdoll_template.instance() as RagdollCar
 	ragdoll_car.global_transform = global_transform
@@ -91,14 +93,23 @@ func ragdoll() -> RagdollCar:
 # when hitting something, turn yourself into ragdoll
 # if the other car is not a ragdoll already, turn it into a ragdoll
 func _on_car_collide(other_car : PhysicsBody2D) -> void:
+	$Audio/CrashSound.play()
 	if other_car.has_method("ragdoll"):
+		other_car.remove_non_crash_sounds()
 		other_car.ragdoll()
+	remove_non_crash_sounds()
 	ragdoll()
 	
+	
+func remove_non_crash_sounds() -> void:
+	for audio in $Audio.get_children():
+		if audio.name != "CrashSound":
+			audio.queue_free()
+		
 
-# ragdolls car before falling
-func fall() -> void:
-	ragdoll().fall()
+# ragdolls car before sinking
+func sink() -> void:
+	ragdoll().sink()
 		
 		
 func _get_rpm() -> float:
