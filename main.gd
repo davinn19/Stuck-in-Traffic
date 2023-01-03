@@ -7,22 +7,61 @@ var car_types : Array = []
 
 var player_car : Car
 
+onready var cam : Camera2D = $Cam
+onready var cam_tween : Tween = $Cam/Tween
+onready var cam_start_pos : Vector2 = cam.position
+
+
 func _init() -> void:
 	_load_car_types()
 	randomize()
 
 
 func _ready() -> void:
-	_create_player()
-	
 	$SolidGround.connect("body_exited", self, "_on_car_fell")
+	_start_game(true)
 	
-	for spawner in get_children():
-		if spawner.name.count("StartSpawner") > 0:
-			for i in range(50):
-				_create_car(spawner).move_local_x(i * -30)
-				
 
+func _start_game(play_intro : bool = false) -> void:
+	_reset()
+	_create_cars()
+	
+	if play_intro:
+		_play_intro()
+		yield(cam_tween, "tween_completed")
+		
+	
+	cam.follow_player = true
+	player_car.get_node("Controller").in_control = true
+	
+	
+func _reset() -> void:
+	for child in $Cars.get_children():
+		child.queue_free()
+	player_car = null
+
+
+func _create_cars() -> void:
+	var latest_car : Car
+	for spawner in $Spawners.get_children():
+		if spawner.name.count("StartSpawner") > 0:
+			var offset : float = 0
+			for i in range(75):
+				latest_car = _create_car(spawner)
+				latest_car.move_local_x(-offset)
+				offset += rand_range(25, 30)
+		
+		elif spawner.name.count("CrashedCar") > 0:
+			_create_car(spawner).call_deferred("ragdoll")
+				
+	_convert_to_player_car(latest_car)
+	
+	
+func _play_intro() -> void:
+	cam_tween.interpolate_property(cam, "position", cam_start_pos, player_car.position, 7, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+	cam_tween.start()
+	
+	
 func _physics_process(delta : float):
 	for car in $Sand.get_overlapping_bodies():
 		if car is Car:
@@ -46,14 +85,15 @@ func _create_car(spawn_point : Node2D) -> Car:
 	
 	return new_car
 	
-	
-func _create_player() -> void:
-	player_car = _create_car($PlayerSpawn)
+
+func _convert_to_player_car(car : Car) -> void:
+	player_car = car
 	var controller : Node = player_car.get_node("Controller")
 	controller.set_script(player_controller)
 	controller.car = player_car
 	
-	$Cam.player = weakref(player_car)
+	cam.player = weakref(player_car)
+	player_car.connect("crashed", self, "_end_game", [false])
 
 	
 func _load_car_types() -> void:

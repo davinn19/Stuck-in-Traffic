@@ -4,7 +4,7 @@
 [ext_resource path="res://stacked_sprites.gd" type="Script" id=2]
 [ext_resource path="res://controllers/ai.gd" type="Script" id=3]
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=22]
 extents = Vector2( 0, 0 )
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -19,7 +19,7 @@ script = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+shape = SubResource( 22 )
 
 [node name="Controller" type="Node2D" parent="."]
 script = ExtResource( 3 )

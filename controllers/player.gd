@@ -1,5 +1,6 @@
 extends Controller
 
+var in_control : bool = false
 
 func _process(delta : float) -> void:
 	if !is_inside_tree():
@@ -8,10 +9,13 @@ func _process(delta : float) -> void:
 		set_process(false)
 		return
 		
-	_check_gear()
-	check_steering_input()
-	update_throttle(Input.is_action_pressed("gas"))
-	update_brake(Input.is_action_pressed("brake"))
+	if in_control:
+		_check_gear()
+		check_steering_input()
+		update_throttle(Input.is_action_pressed("gas"))
+		update_brake(Input.is_action_pressed("brake"))
+	else:
+		update_brake(true)
 	
 
 func _check_gear() -> void:

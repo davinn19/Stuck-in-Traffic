@@ -2,6 +2,7 @@ class_name Car
 extends KinematicBody2D
 
 signal gear_switched
+signal crashed
 
 const car_mass : int = 100
 
@@ -62,6 +63,8 @@ func _get_acceleration() -> float:
 # creates new ragdoll car, moves all children inside current car
 # to ragdoll car, and preserves linear velocity
 func ragdoll() -> RagdollCar:
+	emit_signal("crashed")
+	
 	var ragdoll_car : RagdollCar = ragdoll_template.instance() as RagdollCar
 	ragdoll_car.global_transform = global_transform
 	
