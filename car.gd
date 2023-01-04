@@ -6,7 +6,6 @@ signal crashed
 
 const car_mass : int = 100
 
-const car_infos : String = "res://cars/"
 const ragdoll_template : Resource = preload("res://ragdoll_car.tscn")
 # contains rpm, steering sensitivity
 const gear_properties : Array = [[500, 0.8], [100, 1.2]]

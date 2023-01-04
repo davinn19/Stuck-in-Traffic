@@ -10,7 +10,6 @@ func _ready() -> void:
 	yield(self, "ready")
 	_load_songs()
 	switch_song()
-	print(songs)
 	
 
 func _process(delta : float) -> void:

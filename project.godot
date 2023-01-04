@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Controller",
+"class": "AI",
+"language": "GDScript",
+"path": "res://controllers/ai.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Car",
 "language": "GDScript",
@@ -29,16 +34,23 @@ _global_script_classes=[ {
 "language": "NativeScript",
 "path": "res://addons/godot-git-plugin/git_api.gdns"
 }, {
+"base": "Controller",
+"class": "Player",
+"language": "GDScript",
+"path": "res://controllers/player.gd"
+}, {
 "base": "RigidBody2D",
 "class": "RagdollCar",
 "language": "GDScript",
 "path": "res://ragdoll_car.gd"
 } ]
 _global_script_class_icons={
+"AI": "",
 "Car": "",
 "CarInfo": "",
 "Controller": "",
 "GitAPI": "",
+"Player": "",
 "RagdollCar": ""
 }
 

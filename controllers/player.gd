@@ -1,3 +1,4 @@
+class_name Player
 extends Controller
 
 var in_control : bool = false

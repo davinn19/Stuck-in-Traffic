@@ -10,6 +10,7 @@
 [ext_resource path="res://assets/sounds/splash.mp3" type="AudioStream" id=8]
 
 [sub_resource type="RectangleShape2D" id=22]
+resource_local_to_scene = true
 extents = Vector2( 0, 0 )
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -42,12 +43,14 @@ bus = "SFX"
 stream = ExtResource( 4 )
 autoplay = true
 max_distance = 75.0
+attenuation = 3.73213
 bus = "SFX"
 
 [node name="RevSound" type="AudioStreamPlayer2D" parent="Audio"]
 stream = ExtResource( 7 )
 autoplay = true
 max_distance = 75.0
+attenuation = 3.73213
 bus = "SFX"
 
 [node name="SplashSound" type="AudioStreamPlayer2D" parent="Audio"]

@@ -1,21 +1,23 @@
 extends Node2D
 
+signal game_started
+
 const car_template : Resource = preload("res://car.tscn")
 const radio_template : Resource = preload("res://radio.tscn")
 const player_controller : Resource = preload("res://controllers/player.gd")
+const police_car_info : Resource = preload("res://police_car.tres")
 
-const car_types_dir : String = "res://cars/"
+const car_types_dir : String = "res://car_types/"
 var car_types : Array = []
 
 var player_car : Car
-
-var sfx_muffle : AudioEffect = AudioServer.get_bus_effect(1, 0)
+var brake_held_sec : float = 0
 
 onready var cam : Camera2D = $Cam
 onready var tween : Tween = $Tween
 onready var cam_start_pos : Vector2 = cam.position
 
-
+onready var start_blocker : PhysicsBody2D = $StartBlocker
 
 
 func _init() -> void:
@@ -24,28 +26,37 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	_start_game(true)
+	_setup_new_game(true)
 	
 
-func _process(delta : float) -> void:
-	pass
+func _process(delta : float):
+	if Input.is_action_pressed("brake"):
+		brake_held_sec += delta
+		if brake_held_sec > 2:
+			emit_signal("game_started")
+	else:
+		brake_held_sec = 0
 	
 
-func _start_game(play_intro : bool = false) -> void:
+func _setup_new_game(play_intro : bool = false) -> void:
 	_reset()
 	_create_cars()
 	
 	if play_intro:
-		tween.interpolate_property(cam, "position", cam_start_pos, player_car.position, 7, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+		tween.interpolate_property(cam, "position", cam_start_pos, player_car.position, 5, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT, 3)
 		tween.start()
 		yield(tween, "tween_all_completed")
 		
+	yield(self, "game_started")
+	start_blocker.get_node("CollisionPolygon2D").disabled = true
 	cam.follow_player = true
 	player_car.get_node("Controller").in_control = true
 
 	
 func _end_game(won : bool) -> void:
 	if won:
+		cam.follow_player = false
+		player_car.get_node("Controller").in_control = false
 		print("you win!")
 	else:
 		AudioServer.set_bus_effect_enabled(1, 0, false)
@@ -55,6 +66,7 @@ func _end_game(won : bool) -> void:
 	
 func _reset() -> void:
 	AudioServer.set_bus_effect_enabled(1, 0, true)
+	start_blocker.get_node("CollisionPolygon2D").disabled = false
 	
 	for child in $Cars.get_children():
 		child.queue_free()
@@ -64,24 +76,33 @@ func _reset() -> void:
 func _create_cars() -> void:
 	var latest_car : Car
 	for spawner in $Spawners.get_children():
+		
+		# fills road with cars
 		if spawner.name.begins_with("StartSpawner"):
 			var offset : float = 0
-			for i in range(75):
-				latest_car = _create_car(spawner)
+			for i in range(60):
+				latest_car = create_car(spawner)
 				latest_car.move_local_x(-offset)
 				offset += rand_range(25, 30)
 		
 		# create the crashed cars blocking the road
 		elif spawner.name.begins_with("CrashedCar"):
-			_create_car(spawner).call_deferred("ragdoll")
+			create_car(spawner).call_deferred("ragdoll")
 		
+		# fills opposite lanes with already moving cars
 		elif spawner.name.begins_with("OppositeLane"):
-			pass
+			var offset : float = 0
+			for i in range(25):
+				create_car(spawner).move_local_x(offset)
+				offset += rand_range(100, 150)
+		
+		elif spawner.name.begins_with("Police"):
+			_create_police_car(spawner)
 				
 	_convert_to_player_car(latest_car)
 
 
-func _create_car(spawn_point : Node2D) -> Car:
+func create_car(spawn_point : Node2D) -> Car:
 	var car_info : CarInfo = car_types[randi() % car_types.size()]
 	var new_car : Car = car_template.instance()
 	
@@ -92,12 +113,18 @@ func _create_car(spawn_point : Node2D) -> Car:
 	return new_car
 	
 
+func _create_police_car(spawn_point : Node2D) -> void:
+	var police_car : Car = car_template.instance()
+	police_car.init_car(police_car_info)
+	police_car.global_transform = spawn_point.global_transform
+	$Cars.add_child(police_car)
+	police_car.call_deferred("ragdoll")
+	
+
 func _convert_to_player_car(car : Car) -> void:
 	player_car = car
 	player_car.name = "Player Car"
 	
-#	for audio in player_car.get_node("Audio").get_children():
-#		audio.bus = "Player SFX"
 	player_car.get_node("Audio").add_child(radio_template.instance())
 	
 	var controller : Node = player_car.get_node("Controller")
