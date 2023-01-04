@@ -190,10 +190,6 @@ smoothing_enabled = true
 smoothing_speed = 10.0
 script = ExtResource( 3 )
 
-[node name="UI" type="Control" parent="Cam"]
-margin_right = 40.0
-margin_bottom = 40.0
-
 [node name="Spawners" type="Node2D" parent="."]
 
 [node name="StartSpawner" type="Node2D" parent="Spawners"]
@@ -267,6 +263,7 @@ position = Vector2( 1498, -1448 )
 rotation = -3.92699
 
 [node name="AreaTriggers" type="Node2D" parent="."]
+visible = false
 
 [node name="CarDeleter2" parent="AreaTriggers" instance=ExtResource( 1 )]
 position = Vector2( -796, 863 )
@@ -350,6 +347,7 @@ scale = Vector2( 2, 2 )
 collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StartBlocker"]
+visible = false
 polygon = PoolVector2Array( -7.77817, 19.0919, -2.47485, 17.3242, -1.06064, -0.353577, 17.3241, 1.76776, 15.5564, -14.1422, -8.13171, -4.59613 )
 
 [node name="Tween" type="Tween" parent="."]

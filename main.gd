@@ -1,6 +1,7 @@
 extends Node2D
 
 signal game_started
+signal game_ended
 
 const car_template : Resource = preload("res://car.tscn")
 const radio_template : Resource = preload("res://radio.tscn")
@@ -47,6 +48,7 @@ func _setup_new_game(play_intro : bool = false) -> void:
 		tween.start()
 		yield(tween, "tween_all_completed")
 		
+	cam.position = player_car.position
 	yield(self, "game_started")
 	start_blocker.get_node("CollisionPolygon2D").disabled = true
 	cam.follow_player = true
@@ -54,6 +56,7 @@ func _setup_new_game(play_intro : bool = false) -> void:
 
 	
 func _end_game(won : bool) -> void:
+	emit_signal("game_ended")
 	if won:
 		cam.follow_player = false
 		player_car.get_node("Controller").in_control = false
@@ -61,15 +64,22 @@ func _end_game(won : bool) -> void:
 	else:
 		AudioServer.set_bus_effect_enabled(1, 0, false)
 		print("game over")
-	# TODO implement
+		yield(get_tree().create_timer(5), "timeout")
+		_setup_new_game()
+	# TODO integrate ui
 	
 	
 func _reset() -> void:
 	AudioServer.set_bus_effect_enabled(1, 0, true)
 	start_blocker.get_node("CollisionPolygon2D").disabled = false
 	
-	for child in $Cars.get_children():
-		child.queue_free()
+	var old_cars : Node = $Cars
+	remove_child(old_cars)
+	old_cars.queue_free()
+	var new_cars : YSort = YSort.new()
+	new_cars.name = "Cars"
+	add_child(new_cars)
+	
 	player_car = null
 
 

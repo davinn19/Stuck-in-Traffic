@@ -71,15 +71,6 @@ func _align_lane_position() -> void:
 		emit_signal("target_lane_reached")
 	else:
 		target_rotation = base_rotation - sign(difference) * lerp(0, 40, progress)
-	# TODO ease target rotation
-#	if lane_position_difference > 1:
-#		target_rotation = base_rotation - 30
-#	elif lane_position_difference < -1:
-#		target_rotation = base_rotation + 30
-#	else:
-#		target_rotation = base_rotation
-#		if merging:
-#			emit_signal("target_lane_reached")
 		
 
 func _align_rotation() -> void:
@@ -99,10 +90,8 @@ func merge(merge_left : bool) -> void:
 	
 	
 	if merge_left:
-		#brake_detection.position.y -= 5
 		target_lane_position -= lane_position_difference
 	else:
-		#brake_detection.position.y += 5
 		target_lane_position += lane_position_difference
 	
 	yield(self, "target_lane_reached")

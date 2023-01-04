@@ -1,10 +1,13 @@
+class_name CarSpawner
 extends Area2D
 
 onready var main : Node = get_node("../../")
 
 func _ready() -> void:
+	main.connect("game_ended", self, "set_physics_process", [false])
+
 	set_physics_process(false)
-	yield(get_tree().create_timer(3), "timeout")
+	yield(main, "game_started")
 	set_physics_process(true)
 	
 
