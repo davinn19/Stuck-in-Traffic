@@ -7,7 +7,6 @@ var song_index : int = -1
 var time : float = 0 
 
 func _ready() -> void:
-	yield(self, "ready")
 	_load_songs()
 	switch_song()
 	

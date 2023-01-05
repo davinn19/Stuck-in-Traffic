@@ -2,6 +2,8 @@ extends Node2D
 	
 
 func generate_layers(texture : Texture, num_layers : int) -> void:
+	_clear_old_sprites()
+	
 	var cutout_length : int = texture.get_width() / num_layers
 	var cutout_size : Vector2 = Vector2(cutout_length, cutout_length)
 	
@@ -15,6 +17,11 @@ func generate_layers(texture : Texture, num_layers : int) -> void:
 		add_child(layer)
 		layer.position = Vector2.UP * i
 	
+	
+func _clear_old_sprites() -> void:
+	for child in get_children():
+		child.queue_free()
+		
 	
 func _process(delta : float) -> void:
 	if abs(global_rotation) > 0.00001:

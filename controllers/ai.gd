@@ -36,7 +36,7 @@ func _process(delta : float) -> void:
 	_update_brake_detection()
 	_align_lane_position()
 	_align_rotation()
-
+	
 	
 func _init_brake_detection() -> void:
 	var hitbox_size : Vector2 = get_node("../Hitbox").shape.extents

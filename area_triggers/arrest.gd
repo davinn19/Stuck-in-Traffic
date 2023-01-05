@@ -8,5 +8,5 @@ func _ready() -> void:
 func _on_car_entered(car : PhysicsBody2D) -> void:
 	if car is Car and car.get_node("Controller") is Player:
 		car.call_deferred("ragdoll")
-		# TODO add police sirens to arrest
+		$SirenSound.play()
 	

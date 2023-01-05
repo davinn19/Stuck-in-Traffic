@@ -13,4 +13,4 @@ func _ready() -> void:
 
 func _physics_process(_delta : float) -> void:
 	if get_overlapping_bodies().empty():
-		main.create_car(self)
+		main.create_car(self, main.ai_controller)

@@ -1,12 +1,15 @@
+class_name Main
 extends Node2D
 
 signal game_started
 signal game_ended
 
-const car_template : Resource = preload("res://car.tscn")
-const radio_template : Resource = preload("res://radio.tscn")
-const player_controller : Resource = preload("res://controllers/player.gd")
+const car_template : Resource = preload("res://car/car.tscn")
 const police_car_info : Resource = preload("res://police_car.tres")
+
+const player_controller : Resource = preload("res://controllers/player.tscn")
+const ai_controller : Resource = preload("res://controllers/ai.tscn")
+const prop_controller : Resource = preload("res://controllers/prop.tscn")
 
 const car_types_dir : String = "res://car_types/"
 var car_types : Array = []
@@ -14,6 +17,7 @@ var car_types : Array = []
 var player_car : Car
 var brake_held_sec : float = 0
 
+onready var ui : UI = $UI
 onready var cam : Camera2D = $Cam
 onready var tween : Tween = $Tween
 onready var cam_start_pos : Vector2 = cam.position
@@ -33,41 +37,60 @@ func _ready() -> void:
 func _process(delta : float):
 	if Input.is_action_pressed("brake"):
 		brake_held_sec += delta
-		if brake_held_sec > 2:
+		if brake_held_sec > 1:
+			brake_held_sec = 0
 			emit_signal("game_started")
 	else:
 		brake_held_sec = 0
 	
 
 func _setup_new_game(play_intro : bool = false) -> void:
+	if play_intro:
+		yield(get_tree().create_timer(1), "timeout")
+		$Audio/CrashSound.play()
+		yield($Audio/CrashSound, "finished")
+	else:
+		ui.cover()
+		yield(ui.anim, "animation_finished")
+		
 	_reset()
 	_create_cars()
+	yield(get_tree().create_timer(1), "timeout")
+	ui.uncover()
+	yield(ui.anim, "animation_finished")
 	
 	if play_intro:
 		tween.interpolate_property(cam, "position", cam_start_pos, player_car.position, 5, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT, 3)
 		tween.start()
 		yield(tween, "tween_all_completed")
-		
-	cam.position = player_car.position
+		ui.display_message(ui.title_text)
+		yield(get_tree().create_timer(3), "timeout")
+	
+	ui.display_message(ui.start_text)
+	
 	yield(self, "game_started")
+	
+	ui.clear_message()
 	start_blocker.get_node("CollisionPolygon2D").disabled = true
 	cam.follow_player = true
 	player_car.get_node("Controller").in_control = true
 
 	
-func _end_game(won : bool) -> void:
-	emit_signal("game_ended")
+func end_game(won : bool) -> void:
 	if won:
 		cam.follow_player = false
 		player_car.get_node("Controller").in_control = false
-		print("you win!")
+		ui.display_message(ui.victory_text)
 	else:
 		AudioServer.set_bus_effect_enabled(1, 0, false)
-		print("game over")
-		yield(get_tree().create_timer(5), "timeout")
-		_setup_new_game()
-	# TODO integrate ui
-	
+		ui.display_message(ui.loss_text)
+		
+	yield(get_tree().create_timer(3), "timeout")
+	ui.display_message(ui.restart_text)
+	yield(self, "game_started")
+	emit_signal("game_ended")
+	_setup_new_game()
+		
 	
 func _reset() -> void:
 	AudioServer.set_bus_effect_enabled(1, 0, true)
@@ -84,35 +107,35 @@ func _reset() -> void:
 
 
 func _create_cars() -> void:
-	var latest_car : Car
 	for spawner in $Spawners.get_children():
 		
 		# fills road with cars
 		if spawner.name.begins_with("StartSpawner"):
-			var offset : float = 0
+			var offset : float = 20
 			for i in range(60):
-				latest_car = create_car(spawner)
-				latest_car.move_local_x(-offset)
+				create_car(spawner, ai_controller).move_local_x(-offset)
 				offset += rand_range(25, 30)
+			
+			if spawner.name == "StartSpawner":
+				_create_player_car(spawner, offset)
+				
 		
 		# create the crashed cars blocking the road
 		elif spawner.name.begins_with("CrashedCar"):
-			create_car(spawner).call_deferred("ragdoll")
+			create_car(spawner, prop_controller)
 		
 		# fills opposite lanes with already moving cars
 		elif spawner.name.begins_with("OppositeLane"):
 			var offset : float = 0
 			for i in range(25):
-				create_car(spawner).move_local_x(offset)
+				create_car(spawner, ai_controller).move_local_x(offset)
 				offset += rand_range(100, 150)
 		
 		elif spawner.name.begins_with("Police"):
 			_create_police_car(spawner)
-				
-	_convert_to_player_car(latest_car)
 
 
-func create_car(spawn_point : Node2D) -> Car:
+func create_car(spawn_point : Node2D, controller_type : Resource) -> Car:
 	var car_info : CarInfo = car_types[randi() % car_types.size()]
 	var new_car : Car = car_template.instance()
 	
@@ -120,30 +143,22 @@ func create_car(spawn_point : Node2D) -> Car:
 	new_car.global_transform = spawn_point.global_transform
 	$Cars.add_child(new_car)
 	
+	new_car.add_child(controller_type.instance())
+	
 	return new_car
 	
 
 func _create_police_car(spawn_point : Node2D) -> void:
-	var police_car : Car = car_template.instance()
+	var police_car : Car = create_car(spawn_point, prop_controller)
 	police_car.init_car(police_car_info)
-	police_car.global_transform = spawn_point.global_transform
-	$Cars.add_child(police_car)
-	police_car.call_deferred("ragdoll")
 	
 
-func _convert_to_player_car(car : Car) -> void:
-	player_car = car
+func _create_player_car(spawner : Node2D, offset : float) -> void:
+	player_car = create_car(spawner, player_controller)
+	player_car.move_local_x(-offset)
 	player_car.name = "Player Car"
-	
-	player_car.get_node("Audio").add_child(radio_template.instance())
-	
-	var controller : Node = player_car.get_node("Controller")
-	controller.set_script(player_controller)
-	controller.car = player_car
-	
+	player_car.connect("crashed", self, "end_game", [false])
 	cam.player = weakref(player_car)
-	
-	player_car.connect("crashed", self, "_end_game", [false])
 	
 	
 func _load_car_types() -> void:

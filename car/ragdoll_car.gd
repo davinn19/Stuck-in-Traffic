@@ -2,7 +2,8 @@ class_name RagdollCar
 extends RigidBody2D
 
 onready var tween : Tween = $Tween
-
+	
+	
 # triggers if kinematic hit detection hits a kinematic car
 func _on_collide(car : PhysicsBody2D) -> void:
 	if car.has_method("ragdoll"):

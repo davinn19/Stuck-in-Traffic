@@ -1,7 +1,15 @@
 class_name Player
 extends Controller
 
+const radio_template : Resource = preload("res://car/radio.tscn")
+
 var in_control : bool = false
+
+func _ready() -> void:
+	yield(self, "ready")
+	car.get_node("Audio").add_child(radio_template.instance())
+	car.name = "Player Car"
+
 
 func _process(delta : float) -> void:
 	if !is_inside_tree():

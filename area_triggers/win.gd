@@ -7,4 +7,4 @@ func _ready() -> void:
 	
 func _on_body_entered(car : PhysicsBody2D) -> void:
 	if car is Car and car.get_node("Controller") is Player:
-		get_node("../../")._end_game(true)
+		get_node("../../").end_game(true)

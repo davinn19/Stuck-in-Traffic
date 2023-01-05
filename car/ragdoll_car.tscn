@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://ragdoll_car.gd" type="Script" id=1]
+[ext_resource path="res://car/ragdoll_car.gd" type="Script" id=1]
 
 [node name="RagdollCar" type="RigidBody2D"]
 collision_layer = 2

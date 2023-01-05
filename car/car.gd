@@ -6,7 +6,7 @@ signal crashed
 
 const car_mass : int = 100
 
-const ragdoll_template : Resource = preload("res://ragdoll_car.tscn")
+const ragdoll_template : Resource = preload("res://car/ragdoll_car.tscn")
 # contains rpm, steering sensitivity
 const gear_properties : Array = [[500, 0.8], [100, 1.2]]
 
@@ -37,7 +37,6 @@ func _process(delta : float) -> void:
 		ragdoll()
 		return
 		
-
 	rpm = lerp(0, _get_rpm(), -brake_percent + 1)
 
 	velocity = max(velocity + _get_acceleration() * delta, 0)
@@ -64,12 +63,13 @@ func _get_acceleration() -> float:
 # to ragdoll car, and preserves linear velocity
 func ragdoll() -> RagdollCar:
 	emit_signal("crashed")
-	$Controller.queue_free()
 	
 	var ragdoll_car : RagdollCar = ragdoll_template.instance() as RagdollCar
 	ragdoll_car.global_transform = global_transform
 	
 	for child in get_children():
+#		if child is Controller:
+#			continue
 		if child is Node2D:
 			var old_transform : Transform2D = child.transform
 			remove_child(child)
