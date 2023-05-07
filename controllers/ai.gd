@@ -5,7 +5,7 @@ signal target_lane_reached
 
 const lane_position_difference : int = 25
 
-onready var target_velocity : float = lerp(25, 40, randf())
+onready var target_velocity : float = lerp(25, 35, randf())
 onready var aggression : float = randf()
 
 onready var brake_detection : Area2D = $BrakeDetection
@@ -26,7 +26,11 @@ func _ready() -> void:
 	
 	target_lane_position = _get_lane_position()
 	
-	base_rotation = car.rotation_degrees
+	if abs(car.rotation_degrees - (-45)) < 90:
+		base_rotation = -45
+	else:
+		base_rotation = -45 + 180
+		
 	target_rotation = base_rotation
 
 
@@ -46,7 +50,7 @@ func _init_brake_detection() -> void:
 	
 	
 func _update_brake_detection() -> void:
-	brake_detection.scale.x = base_detection_size + car.velocity / (lerp(1, 3, aggression))
+	brake_detection.scale.x = base_detection_size + car.velocity / (lerp(1, 2, aggression))
 	
 	
 # brakes if there is something in front,

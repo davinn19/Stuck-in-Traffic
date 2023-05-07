@@ -2,6 +2,7 @@ class_name Main
 extends Node2D
 
 signal game_started
+signal game_loaded
 signal game_ended
 
 const car_template : Resource = preload("res://car/car.tscn")
@@ -31,7 +32,7 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	_setup_new_game(true)
+	_play_intro()
 	
 
 func _process(delta : float):
@@ -43,43 +44,16 @@ func _process(delta : float):
 	else:
 		brake_held_sec = 0
 	
-
-func _setup_new_game(play_intro : bool = false) -> void:
-	if play_intro:
-		yield(get_tree().create_timer(1), "timeout")
-		$Audio/CrashSound.play()
-		yield($Audio/CrashSound, "finished")
-	else:
-		ui.cover()
-		yield(ui.anim, "animation_finished")
-		
-	_reset()
-	_create_cars()
-	yield(get_tree().create_timer(1), "timeout")
-	ui.uncover()
-	yield(ui.anim, "animation_finished")
-	
-	if play_intro:
-		tween.interpolate_property(cam, "position", cam_start_pos, player_car.position, 5, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT, 3)
-		tween.start()
-		yield(tween, "tween_all_completed")
-		ui.display_message(ui.title_text)
-		yield(get_tree().create_timer(3), "timeout")
-	
-	ui.display_message(ui.start_text)
-	
-	yield(self, "game_started")
-	
-	ui.clear_message()
-	start_blocker.get_node("CollisionPolygon2D").disabled = true
-	cam.follow_player = true
-	player_car.get_node("Controller").in_control = true
-
 	
 func end_game(won : bool) -> void:
 	if won:
-		cam.follow_player = false
-		player_car.get_node("Controller").in_control = false
+		cam.player = null
+		player_car.remove_child(player_car.get_node("Controller"))
+		player_car.call_deferred("add_child", ai_controller.instance())
+		
+		player_car.disconnect("crashed", self, "end_game")
+		player_car = null
+		
 		ui.display_message(ui.victory_text)
 	else:
 		AudioServer.set_bus_effect_enabled(1, 0, false)
@@ -90,20 +64,73 @@ func end_game(won : bool) -> void:
 	yield(self, "game_started")
 	emit_signal("game_ended")
 	_setup_new_game()
+	
+	
+func _play_intro() -> void:
+	# play crash sound
+	yield(get_tree().create_timer(1), "timeout")
+	$Audio/CrashSound.play()
+	yield($Audio/CrashSound, "finished")
+	
+	_reset()
+	_create_cars()
+	
+	# uncover after delay
+	yield(get_tree().create_timer(1), "timeout")
+	ui.uncover()
+	yield(ui, "uncovered")
+	emit_signal("game_loaded")
+	
+	ui.display_message(ui.title_text)
+	# moves camera over traffic
+	tween.interpolate_property(cam, "position", cam_start_pos, player_car.position, 5, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT, 3)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	
+	_wait_for_game_start()
+
+
+func _wait_for_game_start() -> void:
+	ui.display_message(ui.start_text)
+	yield(self, "game_started")
+	
+	ui.clear_message()
+	start_blocker.get_node("CollisionPolygon2D").disabled = true
+	cam.follow_player = true
+	player_car.get_node("Controller").in_control = true
+	
+
+func _setup_new_game() -> void:
+	ui.cover()
+	yield(ui, "covered")
+		
+	_reset()
+	_create_cars()
+	yield(get_tree().create_timer(1), "timeout")
+	ui.uncover()
+	yield(ui, "uncovered")
+	emit_signal("game_loaded")
+
+	_wait_for_game_start()
 		
 	
 func _reset() -> void:
 	AudioServer.set_bus_effect_enabled(1, 0, true)
 	start_blocker.get_node("CollisionPolygon2D").disabled = false
+	ui.clear_message()
 	
+	_clear_old_cars()
+	
+	player_car = null
+	
+
+func _clear_old_cars() -> void:
 	var old_cars : Node = $Cars
 	remove_child(old_cars)
 	old_cars.queue_free()
 	var new_cars : YSort = YSort.new()
 	new_cars.name = "Cars"
 	add_child(new_cars)
-	
-	player_car = null
 
 
 func _create_cars() -> void:

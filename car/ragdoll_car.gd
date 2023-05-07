@@ -18,7 +18,11 @@ func sink() -> void:
 	
 	tween.interpolate_property(self, "scale", scale, Vector2.ZERO, 5, Tween.TRANS_LINEAR)
 	for audio in $Audio.get_children():
-		tween.interpolate_property(audio, "volume_db", 0, -80.0, 5, Tween.TRANS_LINEAR)
+		if audio.name == "Radio":
+			for song in audio.get_children():
+				tween.interpolate_property(song, "volume_db", 0, -80.0, 5, Tween.TRANS_LINEAR)
+		else:
+			tween.interpolate_property(audio, "volume_db", 0, -80.0, 5, Tween.TRANS_LINEAR)
 	tween.start()
 	yield(tween, "tween_all_completed")
 	queue_free()

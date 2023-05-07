@@ -5,10 +5,9 @@ onready var main : Node = get_node("../../")
 
 func _ready() -> void:
 	main.connect("game_ended", self, "set_physics_process", [false])
+	main.connect("game_loaded", self, "set_physics_process", [true])
 
 	set_physics_process(false)
-	yield(main, "game_started")
-	set_physics_process(true)
 	
 
 func _physics_process(_delta : float) -> void:

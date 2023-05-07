@@ -212,11 +212,11 @@ position = Vector2( -240, 344 )
 rotation = -0.785398
 
 [node name="CrashedCar" type="Node2D" parent="Spawners"]
-position = Vector2( 1077, -970 )
+position = Vector2( 1081, -967 )
 rotation = -0.590384
 
 [node name="CrashedCar2" type="Node2D" parent="Spawners"]
-position = Vector2( 1076, -958 )
+position = Vector2( 1080, -955 )
 rotation = -1.99628
 
 [node name="Police" type="Node2D" parent="Spawners"]
@@ -270,23 +270,23 @@ position = Vector2( 1498, -1448 )
 rotation = -3.92699
 
 [node name="AreaTriggers" type="Node2D" parent="."]
-visible = false
 
 [node name="CarDeleter2" parent="AreaTriggers" instance=ExtResource( 1 )]
 position = Vector2( -796, 863 )
 
 [node name="CarDeleter" parent="AreaTriggers" instance=ExtResource( 1 )]
+position = Vector2( 1940, -1841 )
 
 [node name="Sand" type="Area2D" parent="AreaTriggers"]
 position = Vector2( 72, 45 )
 rotation = -0.785398
 collision_layer = 0
+monitorable = false
 script = ExtResource( 10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaTriggers/Sand"]
 position = Vector2( 74.2462, 44.5477 )
 shape = SubResource( 15 )
-disabled = true
 
 [node name="Water" type="Area2D" parent="AreaTriggers"]
 position = Vector2( 283, 166 )
@@ -325,6 +325,10 @@ shape = SubResource( 17 )
 
 [node name="Arrest2" parent="AreaTriggers" instance=ExtResource( 12 )]
 position = Vector2( 1128, -869 )
+
+[node name="Arrest3" parent="AreaTriggers" instance=ExtResource( 12 )]
+position = Vector2( 1023, -987 )
+rotation = -0.785397
 
 [node name="Win" type="Area2D" parent="AreaTriggers"]
 position = Vector2( 1134, -1054 )
