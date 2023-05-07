@@ -1,0 +1,5 @@
+tilemap : Devils workshop, heavily modified https://devilsworkshop.itch.io/2d-pixel-art-isometric-road-blocks-free-sprites
+songs : LOFI, If you use them, just please CREDIT FabienC@RustedMusicStudio
+cars : https://edusilvart.itch.io/sprite-stack-cars
+sfx : https://touati.itch.io/car-game-sfx-pack
+fonts : https://caffinate.itch.io/fibberish
